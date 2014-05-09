@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<HTML>
+<canvas id="drawPad" width="600" height="600"
+ style="border:1px solid #001122;">
+</canvas>
+<script>
+   function setPixel(imageData,x,y,redValue,greenValue,blueValue,
+   	alpha){
+   	imageData.data[x] = redValue;
+   	imageData.data[x+1] = greenValue;
+   	imageData.data[x+2] = blueValue;
+   	imageData.data[x+3] = alpha;
+   	return imageData;
+   }
+   var c = document.getElementById("drawPad");
+   var context = c.getContext("2d");
+   var imgData= context.createImageData(600,600);
+   var red = 0;
+   var blue = 0;
+   var green = 0;
+   var x = 0;
+   var y = 0;
+   var size = 600*600;
+   for ( var i = 0; i < size; i++)
+   {
+      imgData = setPixel(imgData,x,y,red,green,blue,255);
+      x += 4;
+      if(green < 255)
+      	green += .45;
+      if((i+1)%600 == 0)
+      {
+      	red += .45;
+      	green = 0;
+      }
+      if(red > 255)
+      	red = 255;
+   }
+    context.putImageData(imgData,0,0);
+</script>
+</HTML>

@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<HTML>
+<canvas id="drawPad" width="600" height="600"
+ style="border:1px solid #000000;">
+</canvas>
+<script>
+   function setPixel(imageData,x,y,redValue,greenValue,blueValue,
+   	alpha){
+   	imageData.data[x] = redValue;
+   	imageData.data[x+1] = greenValue;
+   	imageData.data[x+2] = blueValue;
+   	imageData.data[x+3] = alpha;
+   	return imageData;
+   }
+   function fill(){
+      var c = document.getElementById("drawPad");
+   var context = c.getContext("2d");
+   var imgData= context.createImageData(600,600);
+   var red = 0;
+   var blue = 0;
+   var green = 0;
+   var x = 0;
+   var y = 0;
+   var size = 600*600;
+   for ( var i = 0; i < size; i++)
+   {
+      imgData = setPixel(imgData,x,y,red,green,blue,255);
+      x += 4;
+      if(green < 255)
+         green += .45;
+      if((i+1)%600 == 0)
+      {
+         red += .45;
+         green = 0;
+      }
+      if(red > 255)
+         red = 255;
+   }
+    context.putImageData(imgData,0,0);
+
+   }
+   fill();
+   window.requestAnimFrame = (function(callback) {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        function(callback) {
+          window.setTimeout(callback, 2000/60);
+        };
+      })();
+  
+   function Colors(red,green,blue){
+   this.red = red;
+   if (this.red <= 255)
+   {
+      if ((red + 255) <= 255)
+         this.red = 255-(255 + red);
+   }
+   this.green = green;
+   if (this.green <= 255)
+   {
+     if ((green + 255) <= 255)
+         this.green = 255-(255 + green);
+   }
+   this.blue = blue;
+   if (this.blue <= 255)
+   {
+      if ((blue + 255) <= 255)
+         this.blue = 255-(255 + blue); 
+   }
+
+}
+   var color = new Colors(0,0,0);
+   function animate() {
+   var c = document.getElementById("drawPad");
+   var context = c.getContext("2d");
+   var imgData= context.getImageData(0,0,600,600);
+   var redglob = color.red;
+   var blueglob = color.blue;
+   var greenglob = color.green;
+   var x = 0;
+   var y = 0;
+   var size = 600*600;
+   for ( var i = 0; i < size; i++)
+   {
+      imgData = setPixel(imgData,x,y,redglob,greenglob,blueglob,255);
+      x += 4;
+      if(greenglob < 255)
+      	greenglob += .45;
+      if((i+1)%600 == 0)
+      {
+            redglob += .45;
+            greenglob = 0;
+      } 
+      if (redglob > 255)
+         redglob = 255; 
+   }
+    context.putImageData(imgData,0,0);
+    if (blueglob < 255)
+      blueglob += .55;
+      else
+      blueglob = 255;
+
+   color = new Colors (color.red,color.green,blueglob);
+   if (blueglob >= 255)
+      color = new Colors(1+color.red,1+color.green, 1+blueglob);
+   requestAnimFrame(function() {
+          animate();
+        });
+ };
+animate();
+</script>
+</HTML>
